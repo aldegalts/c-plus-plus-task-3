@@ -147,6 +147,7 @@ public:
 };
 
 int main() {
+    // --- Пример 1: int -> string (телефонная книга по ID) ---
     std::cout << "=== AssociativeArray<int, string> ===" << std::endl;
 
     AssociativeArray<int, std::string> phonebook;
@@ -177,6 +178,7 @@ int main() {
 
     std::cout << "Size: " << phonebook.size() << std::endl;
 
+    // --- Пример 2: string -> int (подсчёт слов) ---
     std::cout << "\n=== AssociativeArray<string, int> ===" << std::endl;
 
     AssociativeArray<std::string, int> wordCount;
@@ -210,7 +212,6 @@ int main() {
     std::cout << "Config:" << std::endl;
     config.print();
 
-    // Проверка копирования
     AssociativeArray<std::string, std::string> configCopy = config;
     configCopy["port"] = "3000";
     std::cout << "Original after copy modified:" << std::endl;
@@ -218,11 +219,9 @@ int main() {
     std::cout << "Copy:" << std::endl;
     configCopy.print();
 
-    // Проверка очистки
     config.clear();
     std::cout << "After clear, empty: " << (config.empty() ? "yes" : "no") << std::endl;
 
-    // Проверка исключения
     try {
         config.get("nonexistent");
     } catch (const std::runtime_error& e) {
