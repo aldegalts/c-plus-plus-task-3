@@ -1,153 +1,8 @@
 #include <iostream>
 #include <string>
-#include <stdexcept>
+#include "AssociativeArray.h"
 
-template <typename K, typename V>
-class AssociativeArray {
-private:
-    struct Pair {
-        K key;
-        V value;
-    };
-
-    Pair* data;
-    int count;
-    int capacity;
-
-    void resize() {
-        capacity *= 2;
-        Pair* newData = new Pair[capacity];
-        for (int i = 0; i < count; i++) {
-            newData[i] = data[i];
-        }
-        delete[] data;
-        data = newData;
-    }
-
-    int findIndex(const K& key) const {
-        for (int i = 0; i < count; i++) {
-            if (data[i].key == key) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-public:
-    AssociativeArray() : count(0), capacity(4) {
-        data = new Pair[capacity];
-    }
-
-    AssociativeArray(const AssociativeArray& other) : count(other.count), capacity(other.capacity) {
-        data = new Pair[capacity];
-        for (int i = 0; i < count; i++) {
-            data[i] = other.data[i];
-        }
-    }
-
-    AssociativeArray& operator=(const AssociativeArray& other) {
-        if (this != &other) {
-            delete[] data;
-            count = other.count;
-            capacity = other.capacity;
-            data = new Pair[capacity];
-            for (int i = 0; i < count; i++) {
-                data[i] = other.data[i];
-            }
-        }
-        return *this;
-    }
-
-    ~AssociativeArray() {
-        delete[] data;
-    }
-
-    void insert(const K& key, const V& value) {
-        int idx = findIndex(key);
-        if (idx != -1) {
-            data[idx].value = value;
-            return;
-        }
-        if (count == capacity) {
-            resize();
-        }
-        data[count].key = key;
-        data[count].value = value;
-        count++;
-    }
-
-    V& get(const K& key) {
-        int idx = findIndex(key);
-        if (idx == -1) {
-            throw std::runtime_error("Key not found");
-        }
-        return data[idx].value;
-    }
-
-    const V& get(const K& key) const {
-        int idx = findIndex(key);
-        if (idx == -1) {
-            throw std::runtime_error("Key not found");
-        }
-        return data[idx].value;
-    }
-
-    V& operator[](const K& key) {
-        int idx = findIndex(key);
-        if (idx == -1) {
-            if (count == capacity) {
-                resize();
-            }
-            data[count].key = key;
-            data[count].value = V();
-            count++;
-            return data[count - 1].value;
-        }
-        return data[idx].value;
-    }
-
-    bool remove(const K& key) {
-        int idx = findIndex(key);
-        if (idx == -1) {
-            return false;
-        }
-        for (int i = idx; i < count - 1; i++) {
-            data[i] = data[i + 1];
-        }
-        count--;
-        return true;
-    }
-
-    bool contains(const K& key) const {
-        return findIndex(key) != -1;
-    }
-
-    int size() const {
-        return count;
-    }
-
-    bool empty() const {
-        return count == 0;
-    }
-
-    void clear() {
-        count = 0;
-    }
-
-    void print() const {
-        std::cout << "{ ";
-        for (int i = 0; i < count; i++) {
-            std::cout << data[i].key << ": " << data[i].value;
-            if (i < count - 1) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << " }" << std::endl;
-    }
-};
-
-int main() {
-    // --- Пример 1: int -> string (телефонная книга по ID) ---
+void demoPhonebook() {
     std::cout << "=== AssociativeArray<int, string> ===" << std::endl;
 
     AssociativeArray<int, std::string> phonebook;
@@ -177,8 +32,9 @@ int main() {
     phonebook.print();
 
     std::cout << "Size: " << phonebook.size() << std::endl;
+}
 
-    // --- Пример 2: string -> int (подсчёт слов) ---
+void demoWordCount() {
     std::cout << "\n=== AssociativeArray<string, int> ===" << std::endl;
 
     AssociativeArray<std::string, int> wordCount;
@@ -200,8 +56,9 @@ int main() {
     wordCount.remove("c++");
     std::cout << "After removing \"c++\":" << std::endl;
     wordCount.print();
+}
 
-    // --- Пример 3: string -> string (конфигурация) ---
+void demoConfig() {
     std::cout << "\n=== AssociativeArray<string, string> ===" << std::endl;
 
     AssociativeArray<std::string, std::string> config;
@@ -227,6 +84,12 @@ int main() {
     } catch (const std::runtime_error& e) {
         std::cout << "Exception caught: " << e.what() << std::endl;
     }
+}
+
+int main() {
+    demoPhonebook();
+    demoWordCount();
+    demoConfig();
 
     return 0;
 }
