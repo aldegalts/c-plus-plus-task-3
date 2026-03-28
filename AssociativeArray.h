@@ -81,7 +81,7 @@ public:
     V& get(const K& key) {
         int idx = findIndex(key);
         if (idx == -1) {
-            throw std::runtime_error("Key not found");
+            throw std::runtime_error("Ключ не найден");
         }
         return data[idx].value;
     }
@@ -89,7 +89,7 @@ public:
     const V& get(const K& key) const {
         int idx = findIndex(key);
         if (idx == -1) {
-            throw std::runtime_error("Key not found");
+            throw std::runtime_error("Ключ не найден");
         }
         return data[idx].value;
     }
